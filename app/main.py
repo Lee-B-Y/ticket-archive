@@ -132,7 +132,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="12306 车票归档 API",
+    title="12306车票长存 API",
     version="0.1.0",
     docs_url="/docs",
     redoc_url=None,

@@ -268,7 +268,7 @@ def counts(database: Path) -> dict[str, int]:
 def build_workbook(rows: list[dict], filters: dict[str, str]) -> bytes:
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {"in_memory": True})
-    workbook.set_properties({"title": "12306 车票归档导出", "author": "12306 车票归档"})
+    workbook.set_properties({"title": "12306车票长存导出", "author": "12306车票长存"})
     sheet = workbook.add_worksheet("车票记录")
     info = workbook.add_worksheet("导出说明")
     sheet.hide_gridlines(2)
