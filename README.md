@@ -1,4 +1,4 @@
-# 12306 Ticket Archive Lite
+# 12306 车票归档
 
 一个面向个人自托管的 12306 车票邮件归档工具。它从用户自己的邮箱读取
 `12306@rails.com.cn` 发出的购票、改签和退票通知，将可解析的车票保存到
@@ -19,7 +19,6 @@
 - 响应式桌面表格与手机车票卡片
 - 将当前筛选结果导出为 Excel
 - 使用独立 Bearer API Key 读取 JSON 数据
-- 原始 EML、SQLite、同步游标全部位于一个数据目录，便于备份迁移
 
 ## 部署
 
@@ -108,29 +107,6 @@ GET /api/v1/tickets/{id}
 `date_to`、`status`、`order_no`、`cursor` 和 `limit`。`limit` 范围为 1–200。
 交互式接口文档位于 `/docs`。
 
-## 数据与迁移
-
-```text
-data/
-  tickets.sqlite3       车票、邮件索引、隔离和同步审计
-  tickets.sqlite3-wal   SQLite WAL（运行期间可能存在）
-  tickets.sqlite3-shm
-  raw-eml/              通过校验的 12306 原始邮件
-  sync-state.json       IMAP UIDVALIDITY 和 UID 游标
-```
-
-一致性备份最简单的方法是短暂停止容器后复制整个目录：
-
-```bash
-docker compose stop
-tar -C . -czf ticket-archive-lite-backup.tar.gz data .env compose.yml
-docker compose start
-```
-
-迁移时在新机器恢复项目、`.env` 和完整的 `data/` 目录，保持数据目录 UID/GID
-为 `10001:10001`，再执行 `docker compose up -d --build`。完整目录会同时涵盖
-`tickets.sqlite3` 及其 WAL 文件。
-
 ## 更新与排错
 
 ```bash
@@ -149,10 +125,10 @@ curl -fsS http://127.0.0.1:9121/api/health
 生产镜像保持精简，测试文件通过只读挂载进入一次性容器运行：
 
 ```bash
-docker build -t ticket-archive-lite:test .
+docker build -t ticket-archive:test .
 docker run --rm \
   -v "$PWD/tests:/app/tests:ro" \
-  ticket-archive-lite:test \
+  ticket-archive:test \
   python -m unittest discover -s tests -v
 ```
 

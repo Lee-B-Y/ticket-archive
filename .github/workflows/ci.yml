@@ -15,10 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build production image
-        run: docker build -t ticket-archive-lite:test .
+        run: docker build -t ticket-archive:test .
       - name: Run unit tests in image
         run: |
           docker run --rm \
             -v "$PWD/tests:/app/tests:ro" \
-            ticket-archive-lite:test \
+            ticket-archive:test \
             python -m unittest discover -s tests -v

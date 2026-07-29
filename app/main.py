@@ -24,7 +24,7 @@ from .storage import build_workbook, counts, initialize, query_tickets
 
 BASE = Path(__file__).resolve().parent
 SETTINGS = Settings.from_env()
-SESSION_COOKIE = "ticket_lite_session"
+SESSION_COOKIE = "ticket_archive_session"
 SESSION_SECONDS = 7 * 24 * 60 * 60
 API_FIELDS = (
     "id", "passenger", "status", "departure_at", "train_no", "from_station",
@@ -71,8 +71,8 @@ def verify_session(token: str) -> bool:
         return False
 
 
-def require_session(ticket_lite_session: Annotated[str | None, Cookie()] = None) -> str:
-    if not ticket_lite_session or not verify_session(ticket_lite_session):
+def require_session(ticket_archive_session: Annotated[str | None, Cookie()] = None) -> str:
+    if not ticket_archive_session or not verify_session(ticket_archive_session):
         raise HTTPException(401, "未登录或登录已过期")
     return SETTINGS.username
 
@@ -132,7 +132,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="Ticket Archive Lite API",
+    title="12306 车票归档 API",
     version="0.1.0",
     docs_url="/docs",
     redoc_url=None,
@@ -192,8 +192,8 @@ def logout(_: Annotated[str, Depends(require_session)]):
 
 
 @app.get("/api/session")
-def session(ticket_lite_session: Annotated[str | None, Cookie()] = None):
-    authenticated = bool(ticket_lite_session and verify_session(ticket_lite_session))
+def session(ticket_archive_session: Annotated[str | None, Cookie()] = None):
+    authenticated = bool(ticket_archive_session and verify_session(ticket_archive_session))
     return {
         "ok": True,
         "authenticated": authenticated,

@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    container_name: ticket-archive-lite
+    container_name: ticket-archive
     restart: unless-stopped
     env_file:
       - .env

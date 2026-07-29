@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>车票归档</title>
+  <title>12306 车票归档</title>
   <link rel="icon" href="favicon.png">
   <style>
     :root{color-scheme:light;--blue:#1769aa;--blue2:#0e4f83;--ink:#18212b;--muted:#687581;--line:#d8e0e7;--bg:#f3f6f8;--panel:#fff;--green:#247a4a;--yellow:#fff2bf;--danger:#b3261e}
@@ -44,8 +44,8 @@
 <body>
   <div id="loginView" class="login hidden">
     <form id="loginForm" class="login-panel">
-      <div class="brand"><img src="favicon.png" alt=""><span>车票归档</span></div>
-      <h1>登录</h1><p class="sub">Ticket Archive Lite</p>
+      <div class="brand"><img src="favicon.png" alt=""><span>12306 车票归档</span></div>
+      <h1>登录</h1><p class="sub">个人车票邮件归档</p>
       <div class="field"><label for="username">用户名</label><input id="username" name="username" autocomplete="username" required></div>
       <div class="field"><label for="password">密码</label><div class="password-row"><input id="password" name="password" type="password" autocomplete="current-password" required><button id="showPassword" type="button">显示</button></div></div>
       <button class="primary" type="submit">登录</button><p id="loginError" class="error"></p>
@@ -54,7 +54,7 @@
   <div id="appView" class="shell hidden">
     <div id="overlay" class="overlay"></div>
     <aside id="sidebar">
-      <div class="brand"><img src="favicon.png" alt=""><span>车票归档</span></div>
+      <div class="brand"><img src="favicon.png" alt=""><span>12306 车票归档</span></div>
       <nav class="nav"><button class="active" data-section="tickets">车票</button><button data-section="mail">邮箱</button><button data-section="api">API</button></nav>
       <button id="logout" class="logout">退出登录</button>
     </aside>

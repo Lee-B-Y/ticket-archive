@@ -173,7 +173,7 @@ def _sync_attempt(settings: Settings) -> SyncResult:
         client.login(settings.imap_email, settings.imap_auth_code)
         if settings.imap_host.casefold() in {"imap.163.com", "imap.126.com", "imap.yeah.net"}:
             client._simple_command(
-                "ID", '("name" "ticket-archive-lite" "version" "1.0" "vendor" "self-hosted")'
+                "ID", '("name" "ticket-archive" "version" "1.0" "vendor" "self-hosted")'
             )
         status, _ = client.select(settings.imap_folder, readonly=True)
         if status != "OK":

@@ -1,6 +1,6 @@
 # Contributing
 
-感谢参与 Ticket Archive Lite。提交代码前，请先确认修改不需要真实邮箱、车票、
+感谢参与 12306 车票归档。提交代码前，请先确认修改不需要真实邮箱、车票、
 订单号或授权码作为测试数据。
 
 ## 开发流程
@@ -11,10 +11,10 @@
 4. 在提交 Pull Request 前运行容器测试。
 
 ```bash
-docker build -t ticket-archive-lite:test .
+docker build -t ticket-archive:test .
 docker run --rm \
   -v "$PWD/tests:/app/tests:ro" \
-  ticket-archive-lite:test \
+  ticket-archive:test \
   python -m unittest discover -s tests -v
 ```
 
