@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>车票归档</title>
+  <link rel="icon" href="favicon.png">
+  <style>
+    :root{color-scheme:light;--blue:#1769aa;--blue2:#0e4f83;--ink:#18212b;--muted:#687581;--line:#d8e0e7;--bg:#f3f6f8;--panel:#fff;--green:#247a4a;--yellow:#fff2bf;--danger:#b3261e}
+    *{box-sizing:border-box;letter-spacing:0}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;font-size:14px}
+    button,input,select{font:inherit;color:inherit}
+    button{cursor:pointer}
+    .hidden{display:none!important}
+    .login{min-height:100vh;display:grid;place-items:center;padding:24px}
+    .login-panel{width:min(390px,100%);background:#fff;border:1px solid var(--line);border-radius:8px;padding:28px}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:18px}
+    .brand img{width:38px;height:38px;border-radius:7px}
+    .login h1{margin:30px 0 6px;font-size:22px}.sub{color:var(--muted);margin:0 0 22px}
+    label{display:block;font-size:13px;color:#42505d;margin-bottom:6px}
+    input,select{width:100%;height:38px;border:1px solid #bdc8d2;border-radius:5px;background:#fff;padding:0 10px;outline:none}
+    input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 2px #1769aa20}
+    .field{margin-bottom:14px}.password-row{display:grid;grid-template-columns:1fr auto}.password-row input{border-radius:5px 0 0 5px}.password-row button{border:1px solid #bdc8d2;border-left:0;background:#edf1f4;border-radius:0 5px 5px 0;padding:0 12px}
+    .primary{border:0;border-radius:5px;background:var(--blue);color:#fff;height:38px;padding:0 17px;font-weight:600}.primary:hover{background:var(--blue2)}
+    .login .primary{width:100%;margin-top:6px}.error{min-height:20px;color:var(--danger);margin:10px 0 0}
+    .shell{min-height:100vh;display:grid;grid-template-columns:220px minmax(0,1fr)}
+    aside{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--line);padding:18px 14px;z-index:30}
+    aside .brand{padding:0 7px 18px}.nav{display:flex;flex-direction:column;gap:5px}.nav button{height:39px;border:0;border-radius:5px;background:transparent;text-align:left;padding:0 12px;color:#40505d}.nav button.active{background:#e5f0f8;color:var(--blue2);font-weight:700}.nav button:hover{background:#edf2f5}
+    .logout{position:absolute;bottom:18px;left:14px;right:14px;height:38px;border:1px solid var(--line);background:#fff;border-radius:5px}
+    main{min-width:0;padding:24px 28px 48px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.topbar h1{font-size:22px;margin:0}.menu-button{display:none;border:1px solid var(--line);background:#fff;border-radius:5px;width:38px;height:38px;font-size:20px}.account{color:var(--muted);font-size:13px}
+    section{display:none}section.active{display:block}.band{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px;margin:0 -28px 18px}.band-inner{padding:0 28px}
+    .filters{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:12px}.actions{display:flex;align-items:center;gap:8px;margin-top:14px}.secondary{height:32px;border:1px solid #c8d2db;background:#e9eef2;border-radius:5px;padding:0 12px;font-size:13px}.secondary:hover{background:#dfe6eb}.refresh-state{font-size:12px;color:var(--muted);margin-left:auto}.refresh-state.busy{color:var(--blue)}
+    .spinner{display:inline-block;width:13px;height:13px;border:2px solid #a8c9e2;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:5px}@keyframes spin{to{transform:rotate(360deg)}}
+    .heading-row{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 8px}.heading-row h2{font-size:17px;margin:0}.count{color:var(--muted);font-size:12px}
+    .table-wrap{overflow:auto;border:1px solid var(--line);background:#fff;border-radius:6px}table{width:100%;border-collapse:collapse;white-space:nowrap}th{height:39px;text-align:left;background:#edf2f5;color:#42505d;font-size:12px;font-weight:600;padding:0 11px;border-bottom:1px solid var(--line)}td{height:44px;padding:0 11px;border-bottom:1px solid #e8edf1}tr:last-child td{border-bottom:0}.money{text-align:right}.status{font-size:12px;font-weight:600}.PURCHASED{color:var(--green)}.CHANGED{color:#9a6200}.REFUNDED{color:#7a5966}
+    .cards{display:none}.empty{padding:44px;text-align:center;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:6px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px}.stat b{display:block;font-size:24px;margin-top:6px}.stat span{color:var(--muted);font-size:12px}.settings-block{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -28px 18px;padding:20px 28px}.settings-block h2{font-size:16px;margin:0 0 15px}.kv{display:grid;grid-template-columns:150px 1fr;gap:10px 18px}.kv dt{color:var(--muted)}.kv dd{margin:0;overflow-wrap:anywhere}.ok{color:var(--green)}.failed{color:var(--danger)}
+    pre{margin:12px 0 0;background:#18212b;color:#ecf3f8;border-radius:6px;padding:16px;overflow:auto;line-height:1.55;font-size:12px}.api-path{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#eef2f5;padding:3px 6px;border-radius:4px}
+    .overlay{display:none}
+    @media(max-width:900px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.table-wrap{display:none}.cards{display:grid;gap:9px}.ticket-card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:13px}.route{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700}.route .arrow{color:var(--muted);font-weight:400}.train{margin-left:auto;color:var(--blue2)}.details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px;margin-top:12px}.detail span{display:block;color:var(--muted);font-size:11px;margin-bottom:2px}.detail b{font-size:13px;font-weight:500;overflow-wrap:anywhere}}
+    @media(max-width:680px){.shell{display:block}.menu-button{display:inline-grid;place-items:center}aside{position:fixed;left:0;top:0;width:224px;transform:translateX(-105%);transition:transform .18s ease;box-shadow:8px 0 24px #1b2a3826}aside.open{transform:translateX(0)}.overlay.open{display:block;position:fixed;inset:0;background:#18212b55;z-index:20}main{padding:15px 14px 36px}.topbar{justify-content:flex-start;gap:12px;margin-bottom:14px}.account{margin-left:auto;max-width:36vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.band{margin:0 -14px 14px;padding:12px 0}.band-inner{padding:0 14px}.filters{gap:8px}.filters input,.filters select{height:34px;padding:0 8px}.filters label{font-size:11px;margin-bottom:4px}.actions{margin-top:9px}.heading-row{margin-bottom:6px}.stats{gap:7px}.stat{padding:12px}.stat b{font-size:20px}.settings-block{margin:0 -14px 13px;padding:17px 14px}.kv{grid-template-columns:110px 1fr;gap:9px}.details{grid-template-columns:repeat(3,minmax(0,1fr))}.refresh-state{max-width:38%;text-align:right}}
+  </style>
+</head>
+<body>
+  <div id="loginView" class="login hidden">
+    <form id="loginForm" class="login-panel">
+      <div class="brand"><img src="favicon.png" alt=""><span>车票归档</span></div>
+      <h1>登录</h1><p class="sub">Ticket Archive Lite</p>
+      <div class="field"><label for="username">用户名</label><input id="username" name="username" autocomplete="username" required></div>
+      <div class="field"><label for="password">密码</label><div class="password-row"><input id="password" name="password" type="password" autocomplete="current-password" required><button id="showPassword" type="button">显示</button></div></div>
+      <button class="primary" type="submit">登录</button><p id="loginError" class="error"></p>
+    </form>
+  </div>
+  <div id="appView" class="shell hidden">
+    <div id="overlay" class="overlay"></div>
+    <aside id="sidebar">
+      <div class="brand"><img src="favicon.png" alt=""><span>车票归档</span></div>
+      <nav class="nav"><button class="active" data-section="tickets">车票</button><button data-section="mail">邮箱</button><button data-section="api">API</button></nav>
+      <button id="logout" class="logout">退出登录</button>
+    </aside>
+    <main>
+      <header class="topbar"><button id="menuButton" class="menu-button" aria-label="打开菜单">☰</button><h1 id="pageTitle">车票</h1><span id="account" class="account"></span></header>
+      <section id="tickets" class="active">
+        <div class="band"><form id="filters" class="band-inner"><div class="filters">
+          <div><label>旅客姓名</label><input name="passenger"></div><div><label>车次</label><input name="train_no"></div>
+          <div><label>出发站</label><input name="from_station"></div><div><label>到达站</label><input name="to_station"></div>
+          <div><label>开始日期</label><input name="date_from" type="date"></div><div><label>结束日期</label><input name="date_to" type="date"></div>
+          <div><label>状态</label><select name="status"><option value="">全部</option><option value="PURCHASED">已购票</option><option value="CHANGED">已改签</option><option value="REFUNDED">已退票</option></select></div>
+          <div><label>订单号</label><input name="order_no"></div>
+        </div><div class="actions"><button class="primary" type="submit">查询</button><button id="resetFilters" class="secondary" type="button">清空</button></div></form></div>
+        <div class="heading-row"><h2>车票记录</h2><span id="ticketCount" class="count"></span></div>
+        <div class="actions"><button id="refresh" class="secondary">刷新车票</button><button id="export" class="secondary">导出为 Excel</button><span id="refreshState" class="refresh-state"></span></div>
+        <div id="ticketsTable" class="table-wrap"></div><div id="ticketsCards" class="cards"></div><div id="empty" class="empty hidden">暂无符合条件的车票</div>
+      </section>
+      <section id="mail">
+        <div class="stats"><div class="stat"><span>源邮件</span><b id="emailCount">0</b></div><div class="stat"><span>车票</span><b id="mailTicketCount">0</b></div><div class="stat"><span>事件</span><b id="eventCount">0</b></div></div>
+        <div class="settings-block"><h2>邮箱连接</h2><dl class="kv"><dt>工作模式</dt><dd id="mailMode"></dd><dt>接收邮箱</dt><dd id="mailbox"></dd><dt>12306 邮箱</dt><dd id="sourceEmail"></dd><dt>检查间隔</dt><dd id="interval"></dd><dt>自动确认转发</dt><dd id="autoConfirm"></dd></dl></div>
+        <div class="settings-block"><h2>最近同步</h2><dl class="kv"><dt>状态</dt><dd id="syncStatus"></dd><dt>开始时间</dt><dd id="syncStarted"></dd><dt>完成时间</dt><dd id="syncFinished"></dd><dt>新增邮件</dt><dd id="syncNew"></dd><dt>错误</dt><dd id="syncError"></dd></dl></div>
+      </section>
+      <section id="api">
+        <div class="settings-block"><h2>读取车票</h2><p><span class="api-path">GET /api/v1/tickets</span></p><pre>curl "http://127.0.0.1:9121/api/v1/tickets?limit=50" \
+  -H "Authorization: Bearer &lt;API_KEY&gt;"</pre></div>
+        <div class="settings-block"><h2>筛选参数</h2><dl class="kv"><dt>站点</dt><dd>from_station、to_station</dd><dt>日期</dt><dd>date_from、date_to，格式 YYYY-MM-DD</dd><dt>车票</dt><dd>passenger、train_no、order_no、status</dd><dt>分页</dt><dd>cursor，limit（1–200）</dd></dl></div>
+        <div class="settings-block"><h2>单条记录</h2><p><span class="api-path">GET /api/v1/tickets/{id}</span></p><p class="sub">API 使用 `.env` 中单独设置的 API_KEY，不接受网页登录密码。</p></div>
+      </section>
+    </main>
+  </div>
+  <script>
+    const $=id=>document.getElementById(id);let pollTimer=null;
+    const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    const statusName={PURCHASED:'已购票',CHANGED:'已改签',REFUNDED:'已退票'};
+    const formatTime=value=>{if(!value)return '—';const date=new Date(value);return Number.isNaN(date.getTime())?String(value):date.toLocaleString('zh-CN',{hour12:false,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'})};
+    async function request(url,options={}){const response=await fetch(url,options);if(response.status===401){showLogin();throw new Error('未登录');}const data=await response.json();if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:'请求失败');return data}
+    function showLogin(){$('appView').classList.add('hidden');$('loginView').classList.remove('hidden')}
+    function showApp(user){$('loginView').classList.add('hidden');$('appView').classList.remove('hidden');$('account').textContent=user}
+    function params(){return new URLSearchParams(new FormData($('filters')))}
+    async function loadTickets(){const data=await request('api/tickets?'+params());$('ticketCount').textContent=`${data.count} 条`;renderTickets(data.items)}
+    function renderTickets(items){$('empty').classList.toggle('hidden',items.length>0);$('ticketsTable').innerHTML=items.length?`<table><thead><tr><th>旅客</th><th>状态</th><th>出发时间</th><th>车次</th><th>出发站</th><th>到达站</th><th>席别</th><th>席位</th><th class="money">票价</th><th>订单号</th></tr></thead><tbody>${items.map(t=>`<tr><td>${esc(t.passenger)}</td><td><span class="status ${esc(t.status)}">${esc(statusName[t.status]||t.status)}</span></td><td>${esc(String(t.departure_at||'').replace('T',' '))}</td><td>${esc(t.train_no)}</td><td>${esc(t.from_station)}</td><td>${esc(t.to_station)}</td><td>${esc(t.seat_class)}</td><td>${esc(t.seat_raw)}</td><td class="money">${t.fare==null?'':`¥${Number(t.fare).toFixed(2)}`}</td><td>${esc(t.order_no)}</td></tr>`).join('')}</tbody></table>`:'';$('ticketsCards').innerHTML=items.map(t=>`<article class="ticket-card"><div class="route"><span>${esc(t.from_station)}</span><span class="arrow">→</span><span>${esc(t.to_station)}</span><span class="train">${esc(t.train_no)}</span></div><div class="details"><div class="detail"><span>旅客</span><b>${esc(t.passenger)}</b></div><div class="detail"><span>状态</span><b class="status ${esc(t.status)}">${esc(statusName[t.status]||t.status)}</b></div><div class="detail"><span>出发</span><b>${esc(String(t.departure_at||'').replace('T',' '))}</b></div><div class="detail"><span>席别</span><b>${esc(t.seat_class)}</b></div><div class="detail"><span>席位</span><b>${esc(t.seat_raw)}</b></div><div class="detail"><span>票价</span><b>${t.fare==null?'':`¥${Number(t.fare).toFixed(2)}`}</b></div></div></article>`).join('')}
+    async function loadStatus(){const s=await request('api/status');$('emailCount').textContent=s.counts.emails;$('mailTicketCount').textContent=s.counts.tickets;$('eventCount').textContent=s.counts.ticket_events;$('mailMode').textContent=s.mail_mode==='forward'?'邮件转发':'直接 IMAP';$('mailbox').textContent=s.mailbox;$('sourceEmail').textContent=s.source_email||'不适用';$('interval').textContent=`${s.sync_interval_minutes} 分钟`;$('autoConfirm').textContent=s.auto_confirm_forwarding?'开启':'关闭';const x=s.last_sync;$('syncStatus').textContent=s.syncing?'正在刷新':({success:'成功',failed:'失败',never:'尚未同步',running:'正在刷新'}[x.status]||x.status);$('syncStatus').className=x.status==='failed'?'failed':'ok';$('syncStarted').textContent=formatTime(x.started_at);$('syncFinished').textContent=formatTime(x.finished_at);$('syncNew').textContent=x.new_messages??0;$('syncError').textContent=x.error||'—';$('refreshState').className='refresh-state'+(s.syncing?' busy':'');$('refreshState').innerHTML=s.syncing?'<span class="spinner"></span>正在刷新':(x.finished_at?`上次刷新：${esc(formatTime(x.finished_at))}`:'尚未刷新');if(s.syncing&&!pollTimer)pollTimer=setInterval(async()=>{await loadStatus();const latest=await request('api/status');if(!latest.syncing){clearInterval(pollTimer);pollTimer=null;await loadTickets();await loadStatus()}},1500)}
+    $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginError').textContent='';try{await request('api/login',{method:'POST',body:new FormData(e.target)});const s=await request('api/session');showApp(s.username);await Promise.all([loadTickets(),loadStatus()])}catch(err){$('loginError').textContent=err.message}});
+    $('showPassword').addEventListener('click',()=>{const p=$('password');p.type=p.type==='password'?'text':'password';$('showPassword').textContent=p.type==='password'?'显示':'隐藏'});
+    $('filters').addEventListener('submit',e=>{e.preventDefault();loadTickets()});$('resetFilters').addEventListener('click',()=>{$('filters').reset();loadTickets()});
+    $('refresh').addEventListener('click',async()=>{await request('api/refresh',{method:'POST'});await loadStatus()});$('export').addEventListener('click',()=>{location.href='api/export.xlsx?'+params()});
+    $('logout').addEventListener('click',async()=>{await request('api/logout',{method:'POST'});showLogin()});
+    document.querySelectorAll('.nav button').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));button.classList.add('active');document.querySelectorAll('main section').forEach(x=>x.classList.remove('active'));$(button.dataset.section).classList.add('active');$('pageTitle').textContent=button.textContent;$('sidebar').classList.remove('open');$('overlay').classList.remove('open');if(button.dataset.section==='mail')loadStatus()}));
+    $('menuButton').addEventListener('click',()=>{$('sidebar').classList.add('open');$('overlay').classList.add('open')});$('overlay').addEventListener('click',()=>{$('sidebar').classList.remove('open');$('overlay').classList.remove('open')});
+    (async()=>{try{const s=await request('api/session');if(!s.authenticated){showLogin();return}showApp(s.username);await Promise.all([loadTickets(),loadStatus()])}catch(_){showLogin()}})();
+  </script>
+</body>
+</html>

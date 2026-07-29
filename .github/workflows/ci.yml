@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  container-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build production image
+        run: docker build -t ticket-archive-lite:test .
+      - name: Run unit tests in image
+        run: |
+          docker run --rm \
+            -v "$PWD/tests:/app/tests:ro" \
+            ticket-archive-lite:test \
+            python -m unittest discover -s tests -v
